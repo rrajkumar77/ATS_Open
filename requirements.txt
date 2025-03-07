@@ -1,9 +1,7 @@
 streamlit
-PyPDF2
-google-generativeai
+openai
 python-dotenv
 PyMuPDF
 fitz
-langchain-experimental
 python-docx
-pymupdf
+PyPDF2
