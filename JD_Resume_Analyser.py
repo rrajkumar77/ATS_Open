@@ -205,7 +205,7 @@ Objective: Extract and present relevant information **based on the type of quest
 
 if submit1:
     if uploaded_resume is not None and uploaded_jd is not None:
-        response = get_gemini_response(input_prompt1, resume_content, jd_content)
+        response = get_openai_response(input_prompt1, resume_content, jd_content)
         st.subheader("Technical Recruiter Analysis")
         st.write(response)
     else:
@@ -213,7 +213,7 @@ if submit1:
 
 elif submit2:
     if uploaded_resume is not None and uploaded_jd is not None:
-        response = get_gemini_response(input_prompt2, resume_content, jd_content)
+        response = get_openai_response(input_prompt2, resume_content, jd_content)
         st.subheader("Technical Questions")
         st.write(response)
     else:
@@ -221,7 +221,7 @@ elif submit2:
 
 elif submit3:
     if uploaded_resume is not None and uploaded_jd is not None:
-        response = get_gemini_response(input_prompt3, resume_content, jd_content)
+        response = get_openai_response(input_prompt3, resume_content, jd_content)
         st.subheader("Domain Expert Analysis")
         st.write(response)
     else:
@@ -229,7 +229,7 @@ elif submit3:
 
 elif submit4:
     if uploaded_resume is not None and uploaded_jd is not None:
-        response = get_gemini_response(input_prompt4, resume_content, jd_content)
+        response = get_openai_response(input_prompt4, resume_content, jd_content)
         st.subheader("Technical Manager Analysis")
         st.write(response)
     else:
@@ -237,7 +237,7 @@ elif submit4:
 
 elif submit5:
     if uploaded_resume is not None and uploaded_jd is not None:
-        response = get_gemini_response(input_prompt7, resume_content, jd_content)
+        response = get_openai_response(input_prompt7, resume_content, jd_content)
         st.subheader("The Response is")
         st.write(response)
     else:
@@ -245,7 +245,7 @@ elif submit5:
         
 elif submit6:
     if uploaded_resume is not None and uploaded_jd is not None:
-        response = get_gemini_response(input_prompt6, resume_content, jd_content)
+        response = get_openai_response(input_prompt6, resume_content, jd_content)
         st.subheader("Top Skill Analysis")
         st.write(response)
     else:
@@ -253,7 +253,7 @@ elif submit6:
 
 elif submit7:
     if uploaded_jd is not None:
-        response = get_gemini_response(input_prompt5, "", jd_content)
+        response = get_openai_response(input_prompt5, "", jd_content)
         st.subheader("Job Description Summary")
         st.write(response)
     else:
