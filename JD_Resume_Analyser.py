@@ -10,7 +10,10 @@ st.set_page_config(page_title="Resume Expert")
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# openai.api_key = os.getenv("OPENAI_API_KEY")
+openai_client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
+
+
 
 def get_openai_response(input, pdf_content, prompt):
     try:
