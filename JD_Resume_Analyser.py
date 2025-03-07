@@ -8,10 +8,7 @@ from io import BytesIO
 
 # Set page configuration
 st.set_page_config(page_title="Resume Expert")
-
 load_dotenv()
-
-OPENAI_API_KEY = "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"
 
 # OpenAI API Key Check
 openai.api_key = os.getenv("OPENAI_API_KEY")
