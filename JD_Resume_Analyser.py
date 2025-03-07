@@ -69,6 +69,7 @@ uploaded_resume = st.file_uploader("Upload your Resume (PDF, DOC, DOCX, TXT)..."
 resume_content = input_file_setup(uploaded_resume) if uploaded_resume else ""
 if resume_content:
     st.success("Resume Uploaded Successfully")
+submit7 = st.button("JD Summarization")
 
 # Buttons
 submit1 = st.button("Technical Recruiter Analysis")
@@ -76,8 +77,12 @@ submit2 = st.button("Technical Questions")
 submit3 = st.button("Domain Expert Analysis")
 submit4 = st.button("Technical Manager Analysis")
 top_skills = st.text_input("Top Skills Required for the Job (comma-separated):")
+
 submit6 = st.button("Skill Analysis")
-submit7 = st.button("JD Summarization")
+
+
+input_prompt = st.text_input("Queries: Feel Free to Ask here")
+submit5 = st.button("Answer My Query")
 
 # Skill Analysis Handling
 skills_list = [skill.strip() for skill in top_skills.split(',') if skill.strip()]
