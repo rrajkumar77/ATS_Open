@@ -1,1 +1,2 @@
-# ATS_Open
+# ATS
+Application Tracking System
