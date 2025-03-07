@@ -10,15 +10,12 @@ st.set_page_config(page_title="Resume Expert")
 
 load_dotenv()
 
-# openai.api_key = os.getenv("OPENAI_API_KEY")
-openai_client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
-
-
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_openai_response(input, pdf_content, prompt):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4",  # Change to 'gpt-3.5-turbo' if needed
+            model="gpt-3.5",  # Change to 'gpt-3.5-turbo' if needed
             messages=[
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": f"{input}\n\n{pdf_content}"}
