@@ -4,18 +4,22 @@ import os
 from dotenv import load_dotenv
 import fitz
 import docx
+from io import BytesIO
 
-# Set page configuration at the very beginning
+# Set page configuration
 st.set_page_config(page_title="Resume Expert")
 
 load_dotenv()
 
+# OpenAI API Key Check
 openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
+    st.error("OpenAI API key is missing. Please check your .env file.")
 
 def get_openai_response(input, pdf_content, prompt):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5",  # Change to 'gpt-3.5-turbo' if needed
+            model="gpt-3.5-turbo",  # Ensuring correct model usage
             messages=[
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": f"{input}\n\n{pdf_content}"}
@@ -23,59 +27,74 @@ def get_openai_response(input, pdf_content, prompt):
         )
         return response["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        st.error(f"An error occurred while processing your request: {e}")
+        st.error(f"An error occurred: {e}")
         return None
 
 def input_file_setup(uploaded_file):
     if uploaded_file is not None:
         file_type = uploaded_file.type
+        file_bytes = uploaded_file.getvalue()  # Avoids exhaustion of stream
+
         if file_type == "application/pdf":
-            document = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+            document = fitz.open(stream=BytesIO(file_bytes), filetype="pdf")
             text_parts = [page.get_text() for page in document]
             file_content = " ".join(text_parts)
         elif file_type in ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
-            doc = docx.Document(uploaded_file)
+            doc = docx.Document(BytesIO(file_bytes))
             file_content = "\n".join([para.text for para in doc.paragraphs])
         elif file_type == "text/plain":
-            file_content = uploaded_file.read().decode("utf-8")
+            file_content = file_bytes.decode("utf-8")
         else:
-            raise ValueError("Unsupported file type")
+            st.error("Unsupported file type. Please upload PDF, DOC, DOCX, or TXT.")
+            return None
         return file_content
     else:
-        raise FileNotFoundError("No file uploaded")
+        st.error("No file uploaded.")
+        return None
 
 def extract_skills_from_resume(file_content):
     skills = ["Python", "Machine Learning", "Data Analysis", "Project Management"]
     return skills
 
 ## Streamlit App
-
 st.header("JobFit Analyzer")
-st.subheader('This Application helps you to evaluate the Resume Review with the Job Description')
+st.subheader("Evaluate Resume Compatibility with Job Description")
 
 uploaded_jd = st.file_uploader("Upload Job Description (PDF, DOC, DOCX, TXT)...", type=["pdf", "doc", "docx", "txt"])
-jd_content = ""
-if uploaded_jd is not None:
-    jd_content = input_file_setup(uploaded_jd)
-    st.write("Job Description Uploaded Successfully")
-submit7 = st.button("JD Summarization")
+jd_content = input_file_setup(uploaded_jd) if uploaded_jd else ""
+if jd_content:
+    st.success("Job Description Uploaded Successfully")
 
 uploaded_resume = st.file_uploader("Upload your Resume (PDF, DOC, DOCX, TXT)...", type=["pdf", "doc", "docx", "txt"])
-resume_content = ""
-if uploaded_resume is not None:
-    resume_content = input_file_setup(uploaded_resume)
-    st.write("Resume Uploaded Successfully")
+resume_content = input_file_setup(uploaded_resume) if uploaded_resume else ""
+if resume_content:
+    st.success("Resume Uploaded Successfully")
 
+# Buttons
 submit1 = st.button("Technical Recruiter Analysis")
+submit2 = st.button("Technical Questions")
 submit3 = st.button("Domain Expert Analysis")
 submit4 = st.button("Technical Manager Analysis")
-submit2 = st.button("Technical Questions")
-
 top_skills = st.text_input("Top Skills Required for the Job (comma-separated):")
 submit6 = st.button("Skill Analysis")
+submit7 = st.button("JD Summarization")
 
-input_prompt = st.text_input("Queries: Feel Free to Ask here")
-submit5 = st.button("Answer My Query")
+# Skill Analysis Handling
+skills_list = [skill.strip() for skill in top_skills.split(',') if skill.strip()]
+if submit6:
+    if not skills_list:
+        st.error("Please enter at least one skill for analysis.")
+    elif resume_content and jd_content:
+        input_prompt6 = f"""
+        Role: Skill Analyst
+        Task: Analyze ONLY the following skills from the resume: {', '.join(skills_list)}
+        """
+        response = get_openai_response(input_prompt6, resume_content, jd_content)
+        st.subheader("Top Skill Analysis")
+        st.write(response)
+    else:
+        st.error("Please upload both the Job Description and Resume.")
+
 
 input_prompt1 = """
 Role: Experienced Technical Human Resource Manager with expertise in technical evaluations and Recruitment
