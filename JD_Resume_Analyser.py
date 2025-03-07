@@ -64,12 +64,12 @@ uploaded_jd = st.file_uploader("Upload Job Description (PDF, DOC, DOCX, TXT)..."
 jd_content = input_file_setup(uploaded_jd) if uploaded_jd else ""
 if jd_content:
     st.success("Job Description Uploaded Successfully")
+submit7 = st.button("JD Summarization")
 
 uploaded_resume = st.file_uploader("Upload your Resume (PDF, DOC, DOCX, TXT)...", type=["pdf", "doc", "docx", "txt"])
 resume_content = input_file_setup(uploaded_resume) if uploaded_resume else ""
 if resume_content:
     st.success("Resume Uploaded Successfully")
-submit7 = st.button("JD Summarization")
 
 # Buttons
 submit1 = st.button("Technical Recruiter Analysis")
