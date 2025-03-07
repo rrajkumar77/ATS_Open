@@ -1,34 +1,31 @@
 import streamlit as st
-import google.generativeai as genai
+import openai
 import os
 from dotenv import load_dotenv
 import fitz
 import docx
 
-
-        
 # Set page configuration at the very beginning
 st.set_page_config(page_title="Resume Expert")
 
 load_dotenv()
 
-os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-#def get_gemini_response(input, pdf_content, prompt):
- #   model = genai.GenerativeModel('gemini-pro')
-  #  response = model.generate_content([input, pdf_content, prompt])
-   # return response.text
-
-def get_gemini_response(input, pdf_content, prompt):
+def get_openai_response(input, pdf_content, prompt):
     try:
-        model = genai.GenerativeModel('gemini-pro')
-        response = model.generate_content([input, pdf_content, prompt])
-        return response.text
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # Change to 'gpt-3.5-turbo' if needed
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": f"{input}\n\n{pdf_content}"}
+            ]
+        )
+        return response["choices"][0]["message"]["content"].strip()
     except Exception as e:
         st.error(f"An error occurred while processing your request: {e}")
         return None
-        
+
 def input_file_setup(uploaded_file):
     if uploaded_file is not None:
         file_type = uploaded_file.type
